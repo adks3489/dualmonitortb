@@ -30,10 +30,10 @@ namespace DualMonitor.Controls
 
         private TaskbarProgress _progress;
 
-        static TaskbarButton() 
+        static TaskbarButton()
         {
             _timer = new Timer();
-            _timer.Interval = ButtonConstants.HoverDelay;            
+            _timer.Interval = ButtonConstants.HoverDelay;
             _timer.Tick += new EventHandler(_timer_Tick);
         }
 
@@ -42,7 +42,7 @@ namespace DualMonitor.Controls
             if (_timer.Tag != null)
             {
                 TaskbarButton button = _timer.Tag as TaskbarButton;
-                button.OnCustomHover();                    
+                button.OnCustomHover();
             }
 
             _timer.Stop();
@@ -58,7 +58,7 @@ namespace DualMonitor.Controls
 
         private StringFormat _format;
         private Rectangle _buttonBounds;
-        
+
         private bool _showLabel;
         private int? _maxWidth;
 
@@ -70,13 +70,13 @@ namespace DualMonitor.Controls
             }
         }
 
-        public bool ShowLabel 
-        { 
+        public bool ShowLabel
+        {
             get { return _showLabel; }
             set
             {
                 _showLabel = value;
-                CalculateWidth();                
+                CalculateWidth();
             }
         }
 
@@ -93,8 +93,8 @@ namespace DualMonitor.Controls
 
         private void CalculateWidth()
         {
-            this.Width = ShowLabel 
-                ? Math.Min((MaxWidth ?? int.MaxValue), ButtonConstants.WidthWithLabel) 
+            this.Width = ShowLabel
+                ? Math.Min((MaxWidth ?? int.MaxValue), ButtonConstants.WidthWithLabel)
                 : (IsBig ? ButtonConstants.WidthWithoutLabel : ButtonConstants.SmallWidthWithoutLabel);
         }
 
@@ -104,7 +104,7 @@ namespace DualMonitor.Controls
             this.EnableDragging = true;
             this.AddedToTaskbar = DateTime.Now;
 
-            _tooltipManager = tooltipManager;            
+            _tooltipManager = tooltipManager;
             InitializeComponent();
 
             _overlayIconPath = null;
@@ -118,7 +118,7 @@ namespace DualMonitor.Controls
             _format.LineAlignment = StringAlignment.Center;
             _format.FormatFlags = _format.FormatFlags | StringFormatFlags.NoWrap;
 
-            UpdateFont();            
+            UpdateFont();
         }
 
         protected override void OnDragLeave(EventArgs e)
@@ -159,14 +159,14 @@ namespace DualMonitor.Controls
             else
             {
                 process.ActivateWindow(true);
-            }    
+            }
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
 
-            PrepareBounds();            
+            PrepareBounds();
         }
 
         private void PrepareBounds()
@@ -260,7 +260,7 @@ namespace DualMonitor.Controls
         }
 
         protected override void OnPaint(PaintEventArgs pevent)
-        {            
+        {
             bool isVisualTheme = Native.IsThemeActive() != 0;
 
             if (_buttonBounds == Rectangle.Empty)
@@ -306,7 +306,7 @@ namespace DualMonitor.Controls
                 {
                     g.FillRectangle(new LinearGradientBrush(_buttonBounds, Theme.ButtonFlashBackgroundFrom, Theme.ButtonFlashBackgroundTo, 90f), _buttonBounds);
                 }
-                                        
+
                 if (this.Focused || this._isClicked)
                 {
                     if (!_flashActive)
@@ -330,9 +330,9 @@ namespace DualMonitor.Controls
             }
 
             if (!this.Focused && !this._isClicked)
-            {              
+            {
                 #region Border
-                // draw border over background     
+                // draw border over background
                 if (taskbarLocation == Native.ABEdge.Top)
                 {
                     ButtonBorderDecorator.Draw(g, 0, 3, Width - spaceAfterX - 1, Height - spaceAfterY - 3, false);
@@ -347,7 +347,7 @@ namespace DualMonitor.Controls
 
             if (MainForm.IsHidden) return;
 
-            DrawImageAndText(g, horizontal, spaceAfterX, spaceAfterY);            
+            DrawImageAndText(g, horizontal, spaceAfterX, spaceAfterY);
         }
 
         private void DrawImageAndText(Graphics g, bool horizontal, int spaceAfterX, int spaceAfterY)
@@ -384,7 +384,7 @@ namespace DualMonitor.Controls
                     }
                 }
 
-                Rectangle textRect = new Rectangle(textPosX, 0, Width - (textPosX + spaceAfterX + iconPosX), Height - spaceAfterY + 2);
+                Rectangle textRect = new Rectangle(textPosX, -2, Width - (textPosX + spaceAfterX + iconPosX), Height - spaceAfterY + 2);
                 if (_isClicked)
                 {
                     textRect.Offset(ButtonConstants.ClickedOffset, ButtonConstants.ClickedOffset);
@@ -483,7 +483,7 @@ namespace DualMonitor.Controls
 
             if (MainForm.IsHidden) return;
 
-            DrawImageAndText(g, horizontal, spaceAfterX, spaceAfterY);            
+            DrawImageAndText(g, horizontal, spaceAfterX, spaceAfterY);
         }
 
         private void TryOpenOverlayIcon()
@@ -491,10 +491,10 @@ namespace DualMonitor.Controls
             if (string.IsNullOrEmpty(_overlayIconPath)) return;
 
             try
-            {                
+            {
                 _overlayIcon = new Icon(_overlayIconPath);
             }
-            catch (System.IO.IOException) 
+            catch (System.IO.IOException)
             {
                 // this is to be expected because out explorer hook didn't release the file yet.
                 // this is why we have the _overlayTimer to try again later
